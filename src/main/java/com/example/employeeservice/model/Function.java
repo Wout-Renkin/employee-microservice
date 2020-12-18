@@ -6,11 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Functie {
+public class Function {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String functieNaam;
+    private String functionName;
 
     public int getId() {
         return id;
@@ -20,18 +20,18 @@ public class Functie {
         this.id = id;
     }
 
-    public Functie(String functieNaam) {
-        this.functieNaam = functieNaam;
+    public Function(String functionName) {
+        this.functionName = functionName;
     }
 
-    public String getFunctieNaam() {
-        return functieNaam;
+    public String getFunctionName() {
+        return functionName;
     }
 
-    public void setFunctieNaam(String functieNaam) {
-        this.functieNaam = functieNaam;
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
     }
 
-    private Functie() {
+    private Function() {
     }
 }

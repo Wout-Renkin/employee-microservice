@@ -3,6 +3,7 @@ package com.example.employeeservice.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Employee {
@@ -12,111 +13,100 @@ public class Employee {
     private int id;
 
     @OneToMany(cascade = {CascadeType.ALL})
-    private List<Werkuren> werkuren;
+    private List<WorkingHours> workingHours;
     @ManyToOne(cascade = {CascadeType.ALL})
-    private Functie functie;
-    private String voornaam;
-    private String achternaam;
-    private String gsmNummer;
+    private Function function;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
     private Date startContract;
-    private Date eindeContract;
-    private Boolean actief;
+    private Date endContract;
+    private Boolean active;
     @Column(unique=true)
-    private String rijksregisternummer;
+    private String employeeID = generateEmployeeId();
 
-
-    public List<Werkuren> getWerkuren() {
-        return werkuren;
-    }
-
-    public void setWerkuren(List<Werkuren> werkuren) {
-        this.werkuren = werkuren;
-    }
-
-    public Functie getFunctie() {
-        return functie;
-    }
-
-    public void setFunctie(Functie functie) {
-        this.functie = functie;
-    }
-
-    public String getRijksregisternummer() {
-        return rijksregisternummer;
-    }
-
-    public void setRijksregisternummer(String rijksregisternummer) {
-        this.rijksregisternummer = rijksregisternummer;
+    private String generateEmployeeId() {
+        return "e" + UUID.randomUUID().toString().replace("-", "");
     }
 
     private Employee() {
     }
 
-    public Employee(List<Werkuren> werkuren, Functie functie, String voornaam, String achternaam, String gsmNummer, Date startContract, Date eindeContract, Boolean actief, String rijksregisternummer) {
-        this.werkuren = werkuren;
-        this.functie = functie;
-        this.voornaam = voornaam;
-        this.achternaam = achternaam;
-        this.gsmNummer = gsmNummer;
+
+    public Employee(List<WorkingHours> workingHours,
+                    Function function,
+                    String firstName,
+                    String lastName,
+                    String phoneNumber,
+                    Date startContract,
+                    Date endContract,
+                    Boolean active) {
+        this.workingHours = workingHours;
+        this.function = function;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.startContract = startContract;
-        this.eindeContract = eindeContract;
-        this.actief = actief;
-        this.rijksregisternummer = rijksregisternummer;
+        if (endContract != null) {
+            verifyAfterStartContract(endContract);
+            this.endContract = endContract;
+        }
+        this.active = active;
+    }
+
+    public void endContract(Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("End contract date must be after start contract");
+        }
+        verifyAfterStartContract(date);
+
+        this.endContract = date;
+    }
+
+    public void verifyAfterStartContract(Date date) {
+        if (!date.after(this.startContract)) {
+            throw new IllegalArgumentException("End contract date must be after start contract");
+        }
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public List<WorkingHours> getWorkingHours() {
+        return workingHours;
     }
 
-    public String getVoornaam() {
-        return voornaam;
+    public Function getFunction() {
+        return function;
     }
 
-    public void setVoornaam(String voornaam) {
-        this.voornaam = voornaam;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getAchternaam() {
-        return achternaam;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setAchternaam(String achternaam) {
-        this.achternaam = achternaam;
-    }
-
-    public String getGsmNummer() {
-        return gsmNummer;
-    }
-
-    public void setGsmNummer(String gsmNummer) {
-        this.gsmNummer = gsmNummer;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public Date getStartContract() {
         return startContract;
     }
 
-    public void setStartContract(Date startContract) {
-        this.startContract = startContract;
+    public Date getEndContract() {
+        return endContract;
     }
 
-    public Date getEindeContract() {
-        return eindeContract;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setEindeContract(Date eindeContract) {
-        this.eindeContract = eindeContract;
-    }
-
-    public Boolean getActief() {
-        return actief;
-    }
-
-    public void setActief(Boolean actief) {
-        this.actief = actief;
+    public String getEmployeeID() {
+        return employeeID;
     }
 }
+
