@@ -8,10 +8,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class EmployeeTestFactory {
     private final static SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-
     public static Employee employee1 = new Employee(
             Arrays.asList(
                     new WorkingHours(
@@ -90,6 +90,7 @@ public class EmployeeTestFactory {
 
     public static Date getDate(String date) {
         try {
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             return formatter.parse(date);
         } catch (ParseException e) {
             // wrap into runtime

@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.UUID;
 
 @RestController
@@ -52,7 +55,10 @@ public class EmployeeController {
     }
     @PostConstruct
     public void addEmployeesOnStartup() throws Exception {
+       // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         Employee employee1 = new Employee(
                 Arrays.asList(
