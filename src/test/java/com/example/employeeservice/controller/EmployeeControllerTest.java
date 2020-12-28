@@ -2,24 +2,24 @@ package com.example.employeeservice.controller;
 
 import com.example.employeeservice.EmployeeTestFactory;
 import com.example.employeeservice.model.Employee;
-import com.example.employeeservice.model.Function;
 import com.example.employeeservice.repository.EmployeeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-
+import java.util.ArrayList;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 class EmployeeControllerTest {
-    private final static SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+
 
     private EmployeeController employeeController;
     private EmployeeRepository employeeRepository;
+
 
     @BeforeEach
     void setUp() {
@@ -31,13 +31,39 @@ class EmployeeControllerTest {
     void tearDown() {
     }
 
-
-
     @Test
     public void testFindActiveEmployees () throws Exception {
 
+        //given
+        Employee employee1 = EmployeeTestFactory.employee1;
+        Employee employee2 = EmployeeTestFactory.employee2;
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList.add(employee1);
+        employeeList.add(employee2);
+        when(employeeRepository.findByActive(true)).thenReturn(employeeList);
+
+        //when
+        List<Employee> found = employeeController.findAllEmployees(true);
+
+        //then
+        assertNotNull(found);
+        assertEquals(2,found.size());
     }
 
+    @Test
+    public void testFindInactiveEmployees () throws Exception {
+        //given
+        Employee employee1 = EmployeeTestFactory.inactiveEmployee;
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList.add(employee1);
+        when(employeeRepository.findByActive(false)).thenReturn(employeeList);
+
+        //when
+        List<Employee> found = employeeRepository.findByActive(false);
+        assertNotNull(found);
+        assertEquals(1,found.size());
+
+    }
     @Test
     public void testFindEmployeeByEmployeeId() throws Exception {
         //given
